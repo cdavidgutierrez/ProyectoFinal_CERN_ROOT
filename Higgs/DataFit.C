@@ -11,7 +11,7 @@
 #include "TH1.h"
 using namespace RooFit;
 
-void higgsFactory()
+void DataFit()
 {
     TFile *file = TFile::Open("tutorial.root");
     //Dentro del archivo hay algo llamado RooWorkspace.
@@ -24,7 +24,7 @@ void higgsFactory()
     RooDataSet *hgg_data = (RooDataSet*) wspace->data("dataset");
     RooRealVar *hgg_mass = (RooRealVar*) wspace->var("CMS_hgg_mass");
 
-    plot = hgg_mass->frame();
+    RooPlot *plot = hgg_mass->frame();
 
     hgg_data->plotOn(plot,RooFit::Binning(160)); 
 
