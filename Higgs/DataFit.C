@@ -118,7 +118,7 @@ void DataFit()
     legend->SetFillStyle(0);
     legend->AddEntry(Hframe->findObject("data"), "Data", "ep"); 
     legend->AddEntry(Hframe->findObject("fittotal"), "Fit", "l");
-    legend->AddEntry("",Form("#alpha = %1.2f #pm %1.2f MeV", alpha.getVal(), alpha.getError()),"");
+    legend->AddEntry("",Form("#alpha = %1.2f #pm %1.2f", alpha.getVal(), alpha.getError()),"");
     legend->Draw();
 
 

@@ -11,13 +11,14 @@
 #include "TH1.h"
 using namespace RooFit;
 
+
 void AnalysisMCHiggs()
 {
 
     Int_t seed = 5;
 
-    Double_t MminP = -3.0;
-    Double_t MmaxP = 3.0; 
+    Double_t MminP = -20.0;
+    Double_t MmaxP = 20.0; 
 
 
     // ---------------------------------------------
@@ -28,20 +29,14 @@ void AnalysisMCHiggs()
 
     // Read workspace from file
     RooWorkspace *w = (RooWorkspace *)f->Get("workspace");
-    
-    // Model and data from workspace
-    RooRealVar *Mu = w->var("mean");
-    //RooRealVar *meanMass = new RooRealVar("meanMass", "meanMass", Mu->getVal());
+
+    // Access the MupullData RooDataSet from the workspace
+    RooDataSet *MupullData = (RooDataSet *)w->data("MupullData");
 
 
-    cout << "meanMass -------------- " << Mu->getVal() << endl;
-
-    // ---------------------------------------------
 
     RooRealVar Mmass("Mu","Mu", MminP,MmaxP); 
-    RooDataSet dataMu("dataMu","dataMu",RooArgSet(Mmass));
-
-
+    //RooDataSet dataMu("dataMu","dataMu",RooArgSet(Mmass));
 
 
     // Model Gaussian Mass Mean  
@@ -55,11 +50,28 @@ void AnalysisMCHiggs()
     // -------------------------------------------
 
     // Fit Mass mean 
-    RooFitResult* fitMu = SigMu.fitTo(dataMu, Minos(kFALSE),Save(kTRUE), NumCPU(4));
+    RooFitResult* fitMu = SigMu.fitTo(*MupullData, Minos(kFALSE),Save(kTRUE), NumCPU(4));
     fitMu->Print("v");
 
-    // TCanvas* canv_Mupull = CreateCanvas("canv_Mu", fitMu, dataMu, Mu, MmaxP, MminP, SigMu, sigmaMu, meanMu);
-    // canv_Mupull->Print(Form("plots/Pull_MuBc_ToyMC_%1i.png",seed));
+    // Create a canvas for plotting
+    TCanvas* c = new TCanvas("c", "Mupull Fit", 800, 600);
+
+    // Plot the fitted result
+    RooPlot* Mframe = Mmass.frame();
+    MupullData->plotOn(Mframe,DataError(RooAbsData::SumW2),MarkerSize(1.5)); 
+    SigMu.plotOn(Mframe);
+    Mframe->Draw();
+                                                                                                                      
+    Mframe->SetLabelSize(0.04,"XY");
+    Mframe->SetTitleSize(0.05,"XY");
+    Mframe->GetYaxis()->CenterTitle();   
+    Mframe->GetXaxis()->CenterTitle();   
+    Mframe->SetTitleOffset(1.0,"X");
+    Mframe->SetTitleOffset(0.9,"Y");
+    Mframe->SetTitleSize(0.06,"XY");
+    Mframe->SetMaximum(7.0);
+    Mframe->Draw();  
+    gStyle->SetOptTitle(0/1);
 
 
 }
