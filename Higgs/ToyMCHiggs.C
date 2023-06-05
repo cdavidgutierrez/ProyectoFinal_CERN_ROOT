@@ -84,8 +84,8 @@ void ToyMCHiggs()
 
 
     // Params to fit 
-    RooRealVar Mmean("Mu","Mu", 0.0, -20.0, 20.0);
-    RooDataSet* MupullData = new RooDataSet("MupullData", "Mupull dataset", RooArgSet(Mmean));
+    RooRealVar Mu("Mu","Mu", 0.0, -20.0, 20.0);
+    RooDataSet* MupullData = new RooDataSet("MupullData", "Mupull dataset", RooArgSet(Mu));
 
 
     // ---------------------------------------------
@@ -116,8 +116,8 @@ void ToyMCHiggs()
         cout << "Mupull -------------- " << Mupull << endl;
 
         // Add Mupull value to the dataset
-        Mmean.setVal(Mupull);
-        MupullData->add(RooArgSet(Mmean));
+        Mu.setVal(Mupull);
+        MupullData->add(RooArgSet(Mu));
 
             
         delete toyData;
