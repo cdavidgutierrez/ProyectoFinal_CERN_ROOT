@@ -3,6 +3,9 @@
         "higgsFactory.C": "cpp",
         "DataFit.C": "cpp",
         "HiggsModel.C": "cpp",
-        "writeWorkspace.C": "cpp"
+        "writeWorkspace.C": "cpp",
+        "HiggsModelFactory.C": "cpp",
+        "HiggsFactory2.C": "cpp",
+        "HiggsModelFactory2.C": "cpp"
     }
 }
