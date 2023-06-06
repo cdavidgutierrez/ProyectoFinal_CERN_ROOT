@@ -52,7 +52,7 @@ void ToyMCHiggs()
     // READ WORKSPACE.
     // ---------------------------------------------
     
-    TFile *f = new TFile("HiggsWs.root");
+    TFile *f = new TFile("../HiggsWs.root");
     
     // Read workspace from file
     RooWorkspace *w = (RooWorkspace *)f->Get("workspace");

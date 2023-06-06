@@ -9,6 +9,8 @@
 #include "TAxis.h"
 #include "TFile.h"
 #include "TH1.h"
+
+using namespace std;
 using namespace RooFit;
  
 void readWorkspace()
@@ -27,6 +29,7 @@ void readWorkspace()
     RooAbsData *data = w->data("modelData");
     
     //-------------------------------------------------------------
+    cout<<"Contenido del MODELO........"<<endl;
     model->Print("t");
     model->fitTo(*data);
     

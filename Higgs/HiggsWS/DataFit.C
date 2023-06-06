@@ -13,7 +13,7 @@ using namespace RooFit;
 
 void DataFit()
 {
-    TFile *file = TFile::Open("tutorial.root");
+    TFile *file = TFile::Open("../tutorial.root");
 
     //Dentro del archivo hay algo llamado RooWorkspace.
     file->ls();
@@ -136,7 +136,7 @@ void DataFit()
     RooPlot* framePull = hgg_mass->frame();
     framePull->addPlotable(pullHiggs,"P");
 
-    framePull->SetYTitle("Events - Fit");
+    framePull->SetYTitle("(Data - Fit)/#sigma");
     framePull->SetXTitle("m_{#gamma #gamma} [GeV]");
     framePull->SetLabelSize(0.1,"XY");
     framePull->SetTitleSize(0.13,"X");

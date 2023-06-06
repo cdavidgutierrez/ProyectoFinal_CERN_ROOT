@@ -6,6 +6,13 @@
         "writeWorkspace.C": "cpp",
         "HiggsModelFactory.C": "cpp",
         "HiggsFactory2.C": "cpp",
-        "HiggsModelFactory2.C": "cpp"
+        "HiggsModelFactory2.C": "cpp",
+        "readWorkspace.C": "cpp",
+        "ToyClass.C": "cpp",
+        "ToyMCHiggs.C": "cpp",
+        "AnalysisMCHiggs.C": "cpp",
+        "myToy.C": "cpp",
+        "random": "cpp",
+        "otroToy.C": "cpp"
     }
 }
