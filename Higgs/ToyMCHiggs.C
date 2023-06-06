@@ -42,8 +42,10 @@ void ToyMCHiggs()
 {
     
 
-    Int_t seed=3;
-    Int_t n_total=500;
+    Int_t seed = 3;
+    Int_t n_total = 300;
+    Double_t MminP = -6.0;
+    Double_t MmaxP = 6.0; 
 
   
     // ---------------------------------------------
@@ -55,18 +57,17 @@ void ToyMCHiggs()
     // Read workspace from file
     RooWorkspace *w = (RooWorkspace *)f->Get("workspace");
     
-    // Model and data from workspace
+    // Get data and model from workspace
     RooRealVar *hgg_mass = w->var("CMS_hgg_mass");
     RooAbsPdf *model = w->pdf("model");
-
-    // Params from workspace
-    RooRealVar *MH = w->var("MH");
-    RooRealVar *meanMass = new RooRealVar("meanMass", "meanMass", MH->getVal());
-
-
     model->Print("t");
 
+    RooRealVar *meanMass = new RooRealVar("meanMass", "meanMass", w->var("MH")->getVal());
+    
+    // RooRealVar *meanNorm_b = new RooRealVar("meanNorm_b", "meanNorm_b", w->var("norm_b")->getVal());
+    // RooRealVar *meanNorm_s = new RooRealVar("meanNorm_s", "meanNorm_s", w->var("norm_s")->getVal());
 
+    // -------------------------------------------
     RooRandom::randomGenerator()->SetSeed(seed);
     
     // Verbose 0:
@@ -82,18 +83,20 @@ void ToyMCHiggs()
     RooMsgService::instance().getStream(1).removeTopic(Eval);
     RooMsgService::instance().Print();
 
+    // -------------------------------------------
 
+    
     // Params to fit 
-    RooRealVar Mu("Mu","Mu", 0.0, -10.0, 10.0);
+    RooRealVar Mu("Mu","Mu", 0.0, MminP, MmaxP);
     RooDataSet* MupullData = new RooDataSet("MupullData", "Mupull dataset", RooArgSet(Mu));
 
 
     // ---------------------------------------------
-    // FITTING & TOY MONTE CARLO 
+    // FITTING - TOY MONTE CARLO 
     // ---------------------------------------------
 
     RooFitResult* fitResult;
-    Double_t Mupull;
+    Double_t Mupull, Nspull, Nbpull;
     Int_t status,covQual;
 
 
@@ -103,11 +106,40 @@ void ToyMCHiggs()
         RooDataSet* toyData = model->generate(RooArgSet(*hgg_mass), Extended(kTRUE));
 
         // Fit the model to the toy dataset
-        fitResult = model->fitTo(*toyData,Extended(),Minos(kFALSE),Save(kTRUE), NumCPU(4));
+        fitResult = model->fitTo(*toyData,Extended(),Minos(kFALSE),Save(kTRUE));
 
 
-        // Nspull = (Ns.getVal()-nSignal)/Ns.getError();
-        // Nbpull = (Nb.getVal()-nBkg)/Nb.getError();   
+        if(i==0){
+            TCanvas *c1 = new TCanvas();
+            c1->SetLeftMargin(0.12);
+            c1->SetRightMargin(0.07);
+            c1->SetTopMargin(0.09);
+            c1->SetBottomMargin(0.14); 
+
+            RooPlot* Mframe = hgg_mass->frame();
+            toyData->plotOn(Mframe,DataError(RooAbsData::SumW2),MarkerSize(1.5)); 
+            w->pdf("model")->plotOn(Mframe);
+            w->pdf("model")->plotOn(Mframe, RooFit::Components("hgg_signal"), RooFit::LineColor(kRed), RooFit::LineStyle(kDashed));
+            w->pdf("model")->plotOn(Mframe, RooFit::Components("expo"), RooFit::LineColor(kOrange), RooFit::LineStyle(kDashed));
+
+            Mframe->Draw();
+
+            TLegend *legend1 = new TLegend(0.5,0.7,0.8,0.88);
+            legend1->SetTextSize(0.04); //text size in pixels                                 
+            legend1->SetFillColor(0);
+            legend1->SetBorderSize(0);
+            legend1->SetFillStyle(0); 
+            legend1->AddEntry((TObject*)nullptr, TString::Format("m_H = %.3f #pm %.3f GeV", w->var("MH")->getVal(), w->var("MH")->getError()), ""); // Add a blank entry with the legend text
+            legend1->AddEntry((TObject*)nullptr, TString::Format("#alpha = %.3f #pm %.3f", w->var("alpha")->getVal(), w->var("alpha")->getError()), ""); 
+            legend1->AddEntry((TObject*)nullptr, TString::Format("N_b = %.3f #pm %.3f", w->var("norm_b")->getVal(), w->var("norm_b")->getError()), ""); 
+            legend1->AddEntry((TObject*)nullptr, TString::Format("N_s = %.3f #pm %.3f", w->var("norm_s")->getVal(), w->var("norm_s")->getError()), ""); 
+
+            legend1->Draw();
+
+            c1->Print(Form("plots/Fit_Higgs_ToyMC_%1i.png",seed));
+
+
+        }
 
         // -----------------
         
@@ -119,15 +151,21 @@ void ToyMCHiggs()
 
         // -----------------
 
-        // Params and errors 
-        Mupull = (MH->getVal() - meanMass->getVal()) / MH->getError();       
+        // Pull - Mean mass
+        // Higgs mass from workspace MH
+        Mupull = (w->var("MH")->getVal() - meanMass->getVal()) / w->var("MH")->getError();   
+
+        // Nspull = (w->var("norm_s")->getVal()-meanNorm_s->getVal())/w->var("norm_s")->getError();
+        // Nbpull = (w->var("norm_b")->getVal()-meanNorm_b->getVal())/w->var("norm_b")->getError();     
 
 
-        cout << i << " meanMass -------------- " << meanMass->getVal() << "MH -------------- " << MH->getVal() << endl;
+        cout << i << " meanMass -------------- " << meanMass->getVal() << "MH -------------- " << w->var("MH")->getVal() << endl;
         cout << "Mupull -------------- " << Mupull << endl;
 
-        // Add Mupull value to the dataset
+        // Add Mupull, Nspull, Nspull value to the dataset
         Mu.setVal(Mupull);
+        // Ns.setVal(Nspull);
+        // Nb.setVal(Nspull);
         MupullData->add(RooArgSet(Mu));
 
             
@@ -135,27 +173,6 @@ void ToyMCHiggs()
         delete fitResult;
 
     }
-
-
-
-    // TCanvas *c1 = new TCanvas();
-
-    // c1->SetLeftMargin(0.12);
-    // c1->SetRightMargin(0.07);
-    // c1->SetTopMargin(0.09);
-    // c1->SetBottomMargin(0.14); 
-
-    // // Plot the fitted result
-
-    //  // Generate a toy dataset
-    // RooDataSet* toyData = model->generate(RooArgSet(*hgg_mass), Extended(kTRUE));
-
-    // RooPlot* Mframe = hgg_mass->frame();
-    // toyData->plotOn(Mframe,DataError(RooAbsData::SumW2),MarkerSize(1.5)); 
-    // Mframe->Draw();
-
-
-
 
     // Save the Mupull dataset to the workspace
     w->import(*MupullData);

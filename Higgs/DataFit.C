@@ -165,7 +165,7 @@ void DataFit()
     gPad->RedrawAxis();
 
 
-    hggcan->Print(Form("HigssDataFit.png"));
+    hggcan->Print(Form("plots/HigssDataFit.png"));
 
 
 }

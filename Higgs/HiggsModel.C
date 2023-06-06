@@ -115,7 +115,6 @@ void HiggsModel() {
     // Model
     model.plotOn(Hframe,RooFit::Components("exp"),RooFit::LineColor(kGreen), Name("bkg"));
     model.plotOn(Hframe,RooFit::LineColor(kRed),Name("fittotal"));
-    //model.paramOn(Hframe);
 
     Hframe->SetYTitle("Events / (0.25)");
     Hframe->SetLabelSize(0.06, "XY");
@@ -201,5 +200,5 @@ void HiggsModel() {
     gPad->RedrawAxis();
 
 
-    hggcan->Print(Form("HigssModel.png"));
+    hggcan->Print(Form("plots/HigssModel.png"));
 }
