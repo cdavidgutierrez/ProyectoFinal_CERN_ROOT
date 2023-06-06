@@ -10,11 +10,12 @@
 #include "TFile.h"
 #include "TH1.h"
 
+using namespace std;
 using namespace RooFit;
 
 void HiggsModel() {
 
-    TFile *file = TFile::Open("tutorial.root");
+    TFile *file = TFile::Open("../tutorial.root");
     
     //Dentro del archivo hay algo llamado RooWorkspace.
     file->ls();
@@ -37,10 +38,6 @@ void HiggsModel() {
     RooExponential expo("exp","exponential function", *hgg_mass, alpha);
 
     //------------------- Modelo de la señal --------------------------
-    sigma.setVal(1.);
-    MH.setVal(125);
-    sigma.setConstant();
-    MH.setConstant(false);
     RooGaussian hgg_signal("signal","Gaussian PDF", *hgg_mass, MH, sigma);
 
     //------------------- Modelo combinado ----------------------------
@@ -59,9 +56,10 @@ void HiggsModel() {
     wspace->import(model);  
     RooArgSet *params = model.getParameters(*hgg_data);
 
+    cout<<"Importando el modelo completo en un WS........"<<endl;
     // Guardar el estado actual de los parámetros.
     wspace->saveSnapshot("nominal_values",*params); 
-    wspace->writeToFile("HiggsWs.root");
+    wspace->writeToFile("../HiggsWs.root");
     wspace->Print("V");
 
 
@@ -171,7 +169,7 @@ void HiggsModel() {
     RooPlot* framePull = hgg_mass->frame();
     framePull->addPlotable(pullHiggs,"P");
 
-    framePull->SetYTitle("Events - Fit");
+    framePull->SetYTitle("(Data - Fit)/#sigma");
     framePull->SetXTitle("m_{#gamma #gamma} [GeV]");
     framePull->SetLabelSize(0.1,"XY");
     framePull->SetTitleSize(0.13,"X");
@@ -200,5 +198,5 @@ void HiggsModel() {
     gPad->RedrawAxis();
 
 
-    hggcan->Print(Form("plots/HigssModel.png"));
+    hggcan->Print(Form("../plots/HigssModel.png"));
 }
