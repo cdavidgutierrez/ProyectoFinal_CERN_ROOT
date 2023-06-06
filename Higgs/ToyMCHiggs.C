@@ -43,7 +43,7 @@ void ToyMCHiggs()
     
 
     Int_t seed=3;
-    Int_t n_total=200;
+    Int_t n_total=500;
 
   
     // ---------------------------------------------
@@ -84,7 +84,7 @@ void ToyMCHiggs()
 
 
     // Params to fit 
-    RooRealVar Mu("Mu","Mu", 0.0, -20.0, 20.0);
+    RooRealVar Mu("Mu","Mu", 0.0, -10.0, 10.0);
     RooDataSet* MupullData = new RooDataSet("MupullData", "Mupull dataset", RooArgSet(Mu));
 
 
@@ -94,6 +94,7 @@ void ToyMCHiggs()
 
     RooFitResult* fitResult;
     Double_t Mupull;
+    Int_t status,covQual;
 
 
     for (int i = 0; i < n_total; i++) {
@@ -108,11 +109,21 @@ void ToyMCHiggs()
         // Nspull = (Ns.getVal()-nSignal)/Ns.getError();
         // Nbpull = (Nb.getVal()-nBkg)/Nb.getError();   
 
+        // -----------------
+        
+        status = fitResult->status();
+        covQual = fitResult->covQual();
+
+        if(status!=0)continue;
+        if(covQual!=3)continue;
+
+        // -----------------
+
         // Params and errors 
-        Mupull = (MH->getVal() - meanMass->getVal()) / MH->getError();
+        Mupull = (MH->getVal() - meanMass->getVal()) / MH->getError();       
 
 
-        cout << "meanMass -------------- " << meanMass->getVal() << "MH -------------- " << MH->getVal() << endl;
+        cout << i << " meanMass -------------- " << meanMass->getVal() << "MH -------------- " << MH->getVal() << endl;
         cout << "Mupull -------------- " << Mupull << endl;
 
         // Add Mupull value to the dataset
@@ -124,6 +135,27 @@ void ToyMCHiggs()
         delete fitResult;
 
     }
+
+
+
+    // TCanvas *c1 = new TCanvas();
+
+    // c1->SetLeftMargin(0.12);
+    // c1->SetRightMargin(0.07);
+    // c1->SetTopMargin(0.09);
+    // c1->SetBottomMargin(0.14); 
+
+    // // Plot the fitted result
+
+    //  // Generate a toy dataset
+    // RooDataSet* toyData = model->generate(RooArgSet(*hgg_mass), Extended(kTRUE));
+
+    // RooPlot* Mframe = hgg_mass->frame();
+    // toyData->plotOn(Mframe,DataError(RooAbsData::SumW2),MarkerSize(1.5)); 
+    // Mframe->Draw();
+
+
+
 
     // Save the Mupull dataset to the workspace
     w->import(*MupullData);
