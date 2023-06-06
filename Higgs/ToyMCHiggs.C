@@ -96,7 +96,7 @@ void ToyMCHiggs()
     // ---------------------------------------------
 
     RooFitResult* fitResult;
-    Double_t Mupull, Nspull, Nbpull;
+    Double_t Mupull;
     Int_t status,covQual;
 
 
@@ -119,20 +119,28 @@ void ToyMCHiggs()
             RooPlot* Mframe = hgg_mass->frame();
             toyData->plotOn(Mframe,DataError(RooAbsData::SumW2),MarkerSize(1.5)); 
             w->pdf("model")->plotOn(Mframe);
-            w->pdf("model")->plotOn(Mframe, RooFit::Components("hgg_signal"), RooFit::LineColor(kRed), RooFit::LineStyle(kDashed));
-            w->pdf("model")->plotOn(Mframe, RooFit::Components("expo"), RooFit::LineColor(kOrange), RooFit::LineStyle(kDashed));
+            w->pdf("model")->plotOn(Mframe, RooFit::Components("hgg_signal"), 
+                                    RooFit::LineColor(kRed), RooFit::LineStyle(kDashed));
+            w->pdf("model")->plotOn(Mframe, RooFit::Components("expo"), 
+                                    RooFit::LineColor(kOrange), RooFit::LineStyle(kDashed));
 
             Mframe->Draw();
+            Mframe->SetXTitle("m_{#gamma #gamma} [GeV]");
+            gStyle->SetOptTitle(0/1);
 
             TLegend *legend1 = new TLegend(0.5,0.7,0.8,0.88);
             legend1->SetTextSize(0.04); //text size in pixels                                 
             legend1->SetFillColor(0);
             legend1->SetBorderSize(0);
             legend1->SetFillStyle(0); 
-            legend1->AddEntry((TObject*)nullptr, TString::Format("m_H = %.3f #pm %.3f GeV", w->var("MH")->getVal(), w->var("MH")->getError()), ""); // Add a blank entry with the legend text
-            legend1->AddEntry((TObject*)nullptr, TString::Format("#alpha = %.3f #pm %.3f", w->var("alpha")->getVal(), w->var("alpha")->getError()), ""); 
-            legend1->AddEntry((TObject*)nullptr, TString::Format("N_b = %.3f #pm %.3f", w->var("norm_b")->getVal(), w->var("norm_b")->getError()), ""); 
-            legend1->AddEntry((TObject*)nullptr, TString::Format("N_s = %.3f #pm %.3f", w->var("norm_s")->getVal(), w->var("norm_s")->getError()), ""); 
+            legend1->AddEntry((TObject*)nullptr, TString::Format("m_H = %.3f #pm %.3f GeV", 
+                                w->var("MH")->getVal(), w->var("MH")->getError()), ""); 
+            legend1->AddEntry((TObject*)nullptr, TString::Format("#alpha = %.3f #pm %.3f", 
+                                w->var("alpha")->getVal(), w->var("alpha")->getError()), ""); 
+            legend1->AddEntry((TObject*)nullptr, TString::Format("N_b = %.3f #pm %.3f", 
+                                w->var("norm_b")->getVal(), w->var("norm_b")->getError()), ""); 
+            legend1->AddEntry((TObject*)nullptr, TString::Format("N_s = %.3f #pm %.3f", 
+                                w->var("norm_s")->getVal(), w->var("norm_s")->getError()), ""); 
 
             legend1->Draw();
 
@@ -161,11 +169,11 @@ void ToyMCHiggs()
 
         cout << i << " meanMass -------------- " << meanMass->getVal() << "MH -------------- " << w->var("MH")->getVal() << endl;
         cout << "Mupull -------------- " << Mupull << endl;
+        // Ns.setVal(Nspull);
+        // Nb.setVal(Nspull);
 
         // Add Mupull, Nspull, Nspull value to the dataset
         Mu.setVal(Mupull);
-        // Ns.setVal(Nspull);
-        // Nb.setVal(Nspull);
         MupullData->add(RooArgSet(Mu));
 
             

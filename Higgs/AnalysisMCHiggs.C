@@ -31,8 +31,8 @@ RooDataSet* data,  RooRealVar M, RooRealVar* mean,  RooRealVar* sigma)
 
     // Plot the fitted model and data
     //RooPlot* Mframe = Mu.frame();
-    RooPlot* Mframe = M.frame();
     //MupullData->plotOn(Mframe,DataError(RooAbsData::SumW2),MarkerSize(1.5));
+    RooPlot* Mframe = M.frame();
     data->plotOn(Mframe,DataError(RooAbsData::SumW2),MarkerSize(1.5));
     
     // Plot the model 
@@ -130,7 +130,8 @@ void AnalysisMCHiggs()
     if (fitMu) fitMu->Print();
 
 
-    TCanvas* canv_Mupull = CreateCanvas("canv_Mu", w->pdf("modelPull"), MupullData, Mu, w->var("meanPull"), w->var("sigmaPull"));
+    TCanvas* canv_Mupull = CreateCanvas("canv_Mu", w->pdf("modelPull"), MupullData, Mu, 
+                                        w->var("meanPull"), w->var("sigmaPull"));
     canv_Mupull->Print(Form("plots/Pull_MuHiggs_ToyMC_%1i.png",seed));
 
 
