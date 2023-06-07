@@ -144,7 +144,7 @@ void ToyMCHiggs()
 
             legend1->Draw();
 
-            c1->Print(Form("plots/Fit_Higgs_ToyMC_%1i.png",seed));
+            c1->Print(Form("../plots/Fit_Higgs_ToyMC_%1i.png",seed));
 
 
         }

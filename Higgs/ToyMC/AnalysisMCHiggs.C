@@ -39,8 +39,7 @@ RooDataSet* data,  RooRealVar M, RooRealVar* mean,  RooRealVar* sigma)
     //w->pdf("modelPull")->plotOn(Mframe);
     model->plotOn(Mframe);
     Mframe->Draw();
-
-    Mframe->SetYTitle("Events / 0.25 ");                                                                                                                   
+                                                                                                                   
     Mframe->SetLabelSize(0.04,"XY");
     Mframe->SetTitleSize(0.05,"XY");
     Mframe->GetYaxis()->CenterTitle();   
@@ -132,7 +131,7 @@ void AnalysisMCHiggs()
 
     TCanvas* canv_Mupull = CreateCanvas("canv_Mu", w->pdf("modelPull"), MupullData, Mu, 
                                         w->var("meanPull"), w->var("sigmaPull"));
-    canv_Mupull->Print(Form("plots/Pull_MuHiggs_ToyMC_%1i.png",seed));
+    canv_Mupull->Print(Form("../plots/Pull_MuHiggs_ToyMC_%1i.png",seed));
 
 
 }
