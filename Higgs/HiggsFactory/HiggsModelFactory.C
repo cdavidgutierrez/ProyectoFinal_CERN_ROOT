@@ -106,7 +106,7 @@ void HiggsModelFactory() {
     TCanvas *MC_canvas = new TCanvas("Estudio MC", "Estudio MC", 600, 600);
 
     RooMCStudy *ToyMC = new RooMCStudy(*(wspace->pdf("model")), *hgg_mass, Binned(false), Silence(true), Extended(true), FitOptions(Save(true), PrintEvalErrors(0)));            
-    ToyMC->generateAndFit(1000);
+    ToyMC->generateAndFit(500);
 
     RooPlot *meanFrame = ToyMC->plotPull(*(wspace->var("mean")), Bins(40), FitGauss(true));
     meanFrame->Draw();

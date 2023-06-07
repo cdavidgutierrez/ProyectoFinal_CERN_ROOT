@@ -108,7 +108,7 @@ void HiggsModel() {
     RooPlot *Hframe = hgg_mass->frame();
 
     // Data
-    hgg_data->plotOn(Hframe,RooFit::Binning(160), Name("data")); 
+    hgg_data->plotOn(Hframe,RooFit::Binning(40), Name("data")); 
 
     // Model
     model.plotOn(Hframe,RooFit::Components("exp"),RooFit::LineColor(kGreen), Name("bkg"));
@@ -126,7 +126,7 @@ void HiggsModel() {
     Hframe->SetTitleOffset(0.8, "Y");
     Hframe->SetTitleSize(0.06, "XY");
     Hframe->SetMinimum(-2);
-    Hframe->SetMaximum(33);
+    //Hframe->SetMaximum(33);
     Hframe->Draw();
     gStyle->SetOptTitle(0/1);
 
