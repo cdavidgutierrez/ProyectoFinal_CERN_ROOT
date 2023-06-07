@@ -20,7 +20,7 @@ void HiggsModel() {
     //Dentro del archivo hay algo llamado RooWorkspace.
     file->ls();
 
-    RooRealVar MH("MH","mass of the Hypothetical Boson (H-boson) in GeV",124.7,124.1,125.1);
+    RooRealVar MH("MH","mass of the Hypothetical Boson (H-boson) in GeV",124.79,124.1,125.1);
     RooRealVar mass("m","m (GeV)",100,80,200);
     RooRealVar sigma("resolution","#sigma",10,0,20);
 

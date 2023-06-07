@@ -42,7 +42,7 @@ void ToyMCHiggs()
 {
     
 
-    Int_t seed = 3;
+    Int_t seed = 4;
     Int_t n_total = 300;
     Double_t MminP = -6.0;
     Double_t MmaxP = 6.0; 
@@ -64,9 +64,6 @@ void ToyMCHiggs()
 
     RooRealVar *meanMass = new RooRealVar("meanMass", "meanMass", w->var("MH")->getVal());
     
-    // RooRealVar *meanNorm_b = new RooRealVar("meanNorm_b", "meanNorm_b", w->var("norm_b")->getVal());
-    // RooRealVar *meanNorm_s = new RooRealVar("meanNorm_s", "meanNorm_s", w->var("norm_s")->getVal());
-
     // -------------------------------------------
     RooRandom::randomGenerator()->SetSeed(seed);
     
@@ -119,9 +116,9 @@ void ToyMCHiggs()
             RooPlot* Mframe = hgg_mass->frame();
             toyData->plotOn(Mframe,DataError(RooAbsData::SumW2),MarkerSize(1.5)); 
             w->pdf("model")->plotOn(Mframe);
-            w->pdf("model")->plotOn(Mframe, RooFit::Components("hgg_signal"), 
+            w->pdf("model")->plotOn(Mframe, RooFit::Components("signal"), 
                                     RooFit::LineColor(kRed), RooFit::LineStyle(kDashed));
-            w->pdf("model")->plotOn(Mframe, RooFit::Components("expo"), 
+            w->pdf("model")->plotOn(Mframe, RooFit::Components("exp"), 
                                     RooFit::LineColor(kOrange), RooFit::LineStyle(kDashed));
 
             Mframe->Draw();
@@ -163,14 +160,9 @@ void ToyMCHiggs()
         // Higgs mass from workspace MH
         Mupull = (w->var("MH")->getVal() - meanMass->getVal()) / w->var("MH")->getError();   
 
-        // Nspull = (w->var("norm_s")->getVal()-meanNorm_s->getVal())/w->var("norm_s")->getError();
-        // Nbpull = (w->var("norm_b")->getVal()-meanNorm_b->getVal())/w->var("norm_b")->getError();     
-
 
         cout << i << " meanMass -------------- " << meanMass->getVal() << "MH -------------- " << w->var("MH")->getVal() << endl;
-        cout << "Mupull -------------- " << Mupull << endl;
-        // Ns.setVal(Nspull);
-        // Nb.setVal(Nspull);
+        cout << "Mupull -------------- " << Mupull << "Error" << w->var("MH")->getError() << endl;
 
         // Add Mupull, Nspull, Nspull value to the dataset
         Mu.setVal(Mupull);
@@ -184,6 +176,7 @@ void ToyMCHiggs()
 
     // Save the Mupull dataset to the workspace
     w->import(*MupullData);
+    //w->writeToFile("MC_Toy_Results.root");
     TFile outputFile("MC_Toy_Results.root", "RECREATE");
 
     w->Write();

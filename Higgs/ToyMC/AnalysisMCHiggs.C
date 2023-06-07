@@ -131,7 +131,7 @@ void AnalysisMCHiggs()
 
     TCanvas* canv_Mupull = CreateCanvas("canv_Mu", w->pdf("modelPull"), MupullData, Mu, 
                                         w->var("meanPull"), w->var("sigmaPull"));
-    canv_Mupull->Print(Form("../plots/Pull_MuHiggs_ToyMC_%1i.png",seed));
+    //canv_Mupull->Print(Form("../plots/Pull_MuHiggs_ToyMC_%1i.png",seed));
 
 
 }

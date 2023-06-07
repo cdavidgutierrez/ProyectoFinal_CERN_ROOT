@@ -47,29 +47,19 @@ void ToyMC_Class()
     RooRealVar *hgg_mass = w->var("CMS_hgg_mass");
     RooAbsPdf *model = w->pdf("model");
 
-  //  // --------------
-  //   int const nbin = 1000;
-  //   RooDataSet* DataSet = model->generate(*hgg_mass , 10000); 
-  //   RooFitResult* FitResult = model->fitTo(*DataSet , Extended(true) , Save(true));
+    // ---------------------------------------------
+    // TOY MONTE CARLO 
+    // ---------------------------------------------
 
-  //   // ---------
-
-  //   RooRealVar x("x", "x", 0, 10);
-  //   x.setBins(40);
-  //   RooMCStudy *MC = new RooMCStudy(*model,x, Binned(false), Silence(true), Extended(true), FitOptions(Save(true), PrintEvalErrors(0))); 
-  //   MC->generateAndFit(20); //---Fit "Rapido"---
-
-
-
-  //   ParMeanFrame = MC->plotParam(*(RooRealVar*)(var), Bins(nbin)); //desreferrenciar el puntero
-  //   ParMeanPullFrame = MC->plotPull(*(RooRealVar*)(var), Bins(nbin), FitGauss(true));
-
-
-    TCanvas *MC_canvas = new TCanvas("Estudio MC", "Estudio MC", 600, 600);
-
-    RooMCStudy *ToyMC = new RooMCStudy(*model, *hgg_mass, Binned(false), Silence(true), Extended(true), FitOptions(Save(true), PrintEvalErrors(0)));            
+    RooMCStudy *ToyMC = new RooMCStudy(*model, *hgg_mass, Binned(false), 
+                                      Silence(true), Extended(true), FitOptions(Save(true), PrintEvalErrors(0)));            
     ToyMC->generateAndFit(1000);
 
+
+    // ---------------------------------------------
+    // PLOT PULL 
+    // ---------------------------------------------
+    TCanvas *MC_canvas = new TCanvas("Estudio MC", "Estudio MC", 600, 600);
     RooPlot *meanFrame = ToyMC->plotPull(*(w->var("MH")), Bins(40), FitGauss(true));
     meanFrame->Draw();
 
